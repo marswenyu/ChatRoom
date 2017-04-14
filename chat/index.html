@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html  style="height:95%;">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>在线聊天室</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="//cdn.bootcss.com/angular.js/1.4.3/angular.min.js"></script>
+    <script src="chatApp.js"></script>
+    <style type="text/css">
+        .mine{
+        background-color:teal;
+        }
+        .others{
+        background-color:transparent;
+        }
+    </style>
+</head>
+<body ng-app="chatApp" ng-controller="chatController" style="height:100%;">
+
+    <!--登入畫面-->
+    <div align="center" valign="center" ng-show="!is_login">
+        <form ng-submit="login()">
+            <input type="text" name="username" ng-model="nickname">
+            <button type="submit">進入</button>
+            <p ng-show="username_is_used">The username <font color = "red">{{nickname}}</font> is used</p>
+        </form>
+    </div>
+
+    <!--登入後聊天畫面-->
+    <div style="height:100%;" ng-show="is_login">
+        Hi {{nickname}} Welcome
+        <div style="height:100%;">
+            <!--左側用戶清單-->
+            <div style="float:left;width:20%;height:100%;overflow-x:hidden;overflow-y:scroll;background-color:grey;">
+                <div ng-repeat="x in users">
+                    {{ x.nickname }}
+                </div>
+            </div>
+            <!--右側聊天訊息-->
+            <div style="float:left;width:80%;height:100%;overflow-x:hidden;overflow-y:scroll;background-color:grey;">
+                <div ng-repeat="msg in messages">
+                    <div ng-class="{true: 'mine', false: 'others'}[msg.nickname==nickname]">
+                        [{{msg.nickname}}] says : {{msg.message}}
+                    </div>
+                </div>
+                <form ng-submit="sendMessage()" style="position:absolute;bottom:2%">
+                    <input type="text" ng-model="messageIn">
+                    <button type="submit">傳送</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
